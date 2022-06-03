@@ -16,13 +16,13 @@ public:
     BaseSocket(BaseSocket&& other) = delete;
     BaseSocket& operator=(const BaseSocket& other) = delete;
     BaseSocket& operator=(BaseSocket&& other) = delete;
-    virtual ~BaseSocket() = default; 
+    ~BaseSocket() = default; 
 
 public:
     sockaddr_in buildSockAddr(int domain = AF_INET, int port = 8080, u_long interface = INADDR_ANY) noexcept;
+    void checkError(); 
 
 private:
-    void checkError(); 
     struct sockaddr_in getAddress(); // Consider returning addr as a str or as int. TODO: Review later
     int getSocket();
 
@@ -30,8 +30,4 @@ private:
     int _sock = 0;
     struct sockaddr_in _address;
 };
-
-// TODO: Implement these
-class ServerSocket : public BaseSocket {};
-class ClientSocket : public BaseSocket {};
-}
+} // namespace Networking
