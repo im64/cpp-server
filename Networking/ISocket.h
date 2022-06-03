@@ -18,6 +18,9 @@ public:
     ISocket& operator=(ISocket&& other) = delete;
     virtual ~ISocket() = default; 
 
+public:
+    sockaddr_in buildSockAddr(int domain = AF_INET, int port = 8080, u_long interface = INADDR_ANY) noexcept;
+
 private:
     void checkError(); 
     struct sockaddr_in getAddress(); // Consider returning addr as a str or as int. TODO: Review later

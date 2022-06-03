@@ -1,3 +1,4 @@
+#include <iostream>
 #include <cstdio>
 
 #include "ISocket.h"
@@ -5,13 +6,19 @@
 namespace Networking
 {
 ISocket::ISocket(int domain, int type, int protocol, int port, u_long interface) noexcept
+    : _address{buildSockAddr(domain, port, interface)}
+    , _sock{socket(domain, type, protocol)}
 {
-    _address.sin_family = domain;
-    _address.sin_port = htons(port);
-    _address.sin_addr.s_addr = htonl(interface);
-
-    _sock = socket(domain, type, protocol);
     checkError();
+}
+
+sockaddr_in ISocket::buildSockAddr(int domain, int port, u_long interface) noexcept
+{
+    sockaddr_in addr;
+    addr.sin_family = domain;
+    addr.sin_port = htons(port);
+    addr.sin_addr.s_addr = htonl(interface);
+    return std::move(addr);
 }
 
 void ISocket::checkError()
@@ -23,7 +30,6 @@ void ISocket::checkError()
     exit(EXIT_FAILURE);
 }
 
-// Getters 
 struct sockaddr_in ISocket::getAddress()
 {
     return _address;
@@ -33,5 +39,4 @@ int ISocket::getSocket()
 {
     return _sock;
 }
-
 }
