@@ -6,17 +6,17 @@
 
 namespace Networking
 {
-class ISocket
+class BaseSocket
 {
 public:
-    explicit ISocket(int domain, int type, int protocol, int port, u_long interface) noexcept;
+    explicit BaseSocket(int domain, int type, int protocol, int port, u_long interface) noexcept;
 
 public:
-    ISocket(const ISocket& other) = delete;
-    ISocket(ISocket&& other) = delete;
-    ISocket& operator=(const ISocket& other) = delete;
-    ISocket& operator=(ISocket&& other) = delete;
-    virtual ~ISocket() = default; 
+    BaseSocket(const BaseSocket& other) = delete;
+    BaseSocket(BaseSocket&& other) = delete;
+    BaseSocket& operator=(const BaseSocket& other) = delete;
+    BaseSocket& operator=(BaseSocket&& other) = delete;
+    virtual ~BaseSocket() = default; 
 
 public:
     sockaddr_in buildSockAddr(int domain = AF_INET, int port = 8080, u_long interface = INADDR_ANY) noexcept;
@@ -32,6 +32,6 @@ private:
 };
 
 // TODO: Implement these
-class ServerSocket : public ISocket {};
-class ClientSocket : public ISocket {};
+class ServerSocket : public BaseSocket {};
+class ClientSocket : public BaseSocket {};
 }
