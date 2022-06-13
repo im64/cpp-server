@@ -6,11 +6,10 @@ ClientSocket::ClientSocket(int domain, int type, int protocol, int port, u_long 
     : BaseSocket{domain, type, protocol, port, interface}
 {}
 
-int ClientSocket::connectToServer(int sock, struct sockaddr_in addr) const
+void ClientSocket::connectToServer(int sock, struct sockaddr_in addr)
 {
-    int conn = connect(sock, (struct sockaddr*) &addr, sizeof(addr));
-    if (conn >= 0) // Success 
-        return conn;
+    _conn = connect(sock, (struct sockaddr*) &addr, sizeof(addr));
+    if (_conn >= 0) return; // Success 
 
     perror("Unable to bind");
     exit(EXIT_FAILURE);

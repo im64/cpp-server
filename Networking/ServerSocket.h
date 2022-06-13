@@ -14,6 +14,10 @@ public:
     ServerSocket& operator=(ServerSocket&& other) = delete;
 
 public:
-    int bindToNetwork(int sock, struct sockaddr_in addr) const; // openConnection?
+    void bindToNetwork(int sock, struct sockaddr_in addr); // openConnection?
+    int getConnection() { return _conn; }
+
+private:
+    int _conn = 0;
 };
 } // namespace Networking

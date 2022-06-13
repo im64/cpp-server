@@ -14,6 +14,10 @@ public:
     ClientSocket& operator=(ClientSocket&& other) = delete;
 
 public:
-    int connectToServer(int sock, struct sockaddr_in addr) const;
+    void connectToServer(int sock, struct sockaddr_in addr);
+    int getConnection() { return _conn; }
+
+private:
+    int _conn = 0;
 };
-}
+} // namespace Networking

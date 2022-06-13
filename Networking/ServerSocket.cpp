@@ -6,11 +6,10 @@ ServerSocket::ServerSocket(int domain, int type, int protocol, int port, u_long 
     : BaseSocket{domain, type, protocol, port, interface}
 {}
 
-int ServerSocket::bindToNetwork(int sock, struct sockaddr_in addr) const
+void ServerSocket::bindToNetwork(int sock, struct sockaddr_in addr)
 {
-    int b = bind(sock, (struct sockaddr*) &addr, sizeof(addr));
-    if (b >= 0) // Success 
-        return b;
+    _conn = bind(sock, (struct sockaddr*) &addr, sizeof(addr));
+    if (_conn >= 0) return; // Success 
 
     perror("Unable to bind");
     exit(EXIT_FAILURE);
