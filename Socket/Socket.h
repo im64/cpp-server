@@ -1,10 +1,7 @@
 #pragma once
 
-#include <string>
-#include <sys/socket.h>
-
-
 #include "ISocket.h"
+#include <arpa/inet.h>
 
 /**
  * Implementation of TCP socket for UNIX systems.
@@ -23,24 +20,25 @@ public:
     }
 
 public:
-    // Non copyable and non movable
+    // Non copyable, movable 
     Socket(const Socket& other) = delete;
-    Socket(Socket&& other) = delete;
     Socket& operator=(const Socket& other) = delete;
-    Socket& operator=(Socket&& other) = delete;
+    Socket(Socket&& other) = default;
+    Socket& operator=(Socket&& other) = default;
     virtual ~Socket();
 
 public: // ISocket implementation
-    int bind(Address addr) const override;
-    int listen() const override;
-    int accept(Address addr) const override;
-    int connect(Address addr) const override;
+    void Bind(Address addr) const override;
+    void Listen() const override;
+    void Connect(Address addr) const override;
+    ISocketUPtr Accept(Address addr) const override;
 
 private:
-    void checkState();
+    void checkState() const;
+    sockaddr_in convertToSockaddr(const Address addr) const;
 
 private:
     int _sockfd;
-    SocketState _state;
+    mutable SocketState _state;
 };
 } // namespace Socket

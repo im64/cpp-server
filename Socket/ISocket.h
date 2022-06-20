@@ -1,6 +1,8 @@
 #pragma once
 
 #include <cstdint>
+#include <string>
+#include <memory>
 #include <unordered_map>
 
 namespace Socket
@@ -15,25 +17,25 @@ enum class SocketState : std::size_t
     ConnectionError,
 };
 
+struct Address
+{
+    std::string ipAddr;
+    uint16_t port;
+};
+
+class ISocket;
+using ISocketUPtr = std::unique_ptr<ISocket>;
+
 class ISocket
 {
 public:
     virtual ~ISocket() = default;
 
 public:
-    struct Address
-    {
-        uint32_t ipAddr;
-        uint16_t port;
-    };
-
-public:
-    virtual int setsockopt(int level, int optname,  const void* optval, uint32_t optlen) const = 0;
-
-    virtual int bind(Address addr) const = 0;
-    virtual int listen() const = 0;
-    virtual int accept(Address addr) const = 0;
-
-    virtual int connect(Address addr) const = 0; 
+    // Capitals because name collisions 
+    virtual void Bind(Address addr) const = 0;
+    virtual void Listen() const = 0;
+    virtual void Connect(Address addr) const = 0; 
+    virtual ISocketUPtr Accept(Address addr) const = 0;
 };
 } // namespace Socket
