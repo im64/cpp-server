@@ -24,15 +24,17 @@ namespace Socket
 {
 void Socket::Bind(Address addr) const
 {
-    // int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
     sockaddr_in address = convertToSockaddr(addr);
-    if(bind(static_cast<const int>(_sockfd), (const sockaddr*)&address, sizeof(address)) < 0)
+    if(bind(_sockfd, (const sockaddr*)&address, sizeof(address)) != 0)
         _state = SocketState::BindingError;
     checkState();
 }
 
 void Socket::Listen() const
 {
+    if(listen(_sockfd, 10) != 0)
+        _state = SocketState::ListeningError;
+    checkState();
 }
 
 ISocketUPtr Socket::Accept(Address addr) const
