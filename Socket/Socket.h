@@ -6,7 +6,11 @@
 
 #include "ISocket.h"
 
-namespace Socket // TCP socket considered
+/**
+ * Implementation of TCP socket for UNIX systems.
+ * If you want to use the server under Windows, reimplement this class using winsock
+ */
+namespace Socket 
 {
 class Socket final : public ISocket
 {
@@ -19,19 +23,18 @@ public:
     }
 
 public:
+    // Non copyable and non movable
     Socket(const Socket& other) = delete;
     Socket(Socket&& other) = delete;
     Socket& operator=(const Socket& other) = delete;
     Socket& operator=(Socket&& other) = delete;
-    virtual ~Socket(); // Since its base virtual dtor gonna be anyways
+    virtual ~Socket();
 
 public: // ISocket implementation
-    int setsockopt(int level, int optname,  const void* optval, uint32_t optlen) const override;
-    int bind(Address addr, uint32_t addrlen) const override;
+    int bind(Address addr) const override;
     int listen() const override;
-    int accept(Address addr, uint32_t* addrlen) const override;
-    int connect(const ISocket& sock, Address addr, uint32_t addrlen) const override;
-
+    int accept(Address addr) const override;
+    int connect(Address addr) const override;
 
 private:
     void checkState();
