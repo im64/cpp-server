@@ -5,6 +5,5 @@ project(cpp-server)
 add_executable(
     ${PROJECT_NAME} 
     main.cpp 
-    Socket/ISocket.h
     Socket/Socket.cpp
 )

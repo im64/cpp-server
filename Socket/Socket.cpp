@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <unistd.h>
 
 #include "Socket.h"
 
@@ -58,5 +59,11 @@ sockaddr_in Socket::convertToSockaddr(const Address addr) const
     address.sin_addr.s_addr = inet_addr(addr.ipAddr.c_str());
     address.sin_port = htons(addr.port);
     return address;
+}
+
+
+Socket::~Socket()
+{
+    close(_sockfd);
 }
 } // namespace Socket
