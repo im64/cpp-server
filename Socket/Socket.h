@@ -19,6 +19,11 @@ public:
         checkState();
     }
 
+    Socket(int sockfd) : _sockfd(sockfd)
+    {
+        checkState();
+    }
+
 public:
     // Non copyable, movable 
     Socket(const Socket& other) = delete;

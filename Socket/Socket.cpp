@@ -39,11 +39,25 @@ void Socket::Listen() const
 
 ISocketUPtr Socket::Accept(Address addr) const
 {
-    return nullptr;
+    auto address = convertToSockaddr(addr);
+    auto addrlen = sizeof(address);
+
+    int newSockFd = accept(_sockfd, (sockaddr *)&address, (socklen_t*)&addrlen);
+    if (newSockFd < 0)
+        _state = SocketState::AcceptingError;
+    checkState();
+
+    ISocketUPtr newSock = std::make_unique<Socket>(newSockFd);
+    return std::move(newSock);
 }
 
 void Socket::Connect(Address addr) const
 {
+    // connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
+    auto address = convertToSockaddr(addr);
+    if(connect(_sockfd, (sockaddr*) &address, sizeof(address)) < 0)
+        _state = SocketState::ConnectionError;
+    checkState();
 }
 
 void Socket::checkState() const
