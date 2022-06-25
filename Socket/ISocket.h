@@ -7,10 +7,9 @@
 
 namespace Socket
 {
-enum class SocketState : std::size_t
+enum class SocketError : std::size_t
 {
-    OK = 0,
-    CreationError,
+    CreationError = 0,
     BindingError,
     ListeningError,
     AcceptingError,
@@ -32,10 +31,11 @@ public:
     virtual ~ISocket() = default;
 
 public:
-    // Capitals because name collisions 
-    virtual void Bind(Address addr) const = 0;
+    // Each name starts with capital to avoid name collisions 
+    virtual void Bind() const = 0;
     virtual void Listen() const = 0;
-    virtual void Connect(Address addr) const = 0; 
-    virtual ISocketUPtr Accept(Address addr) const = 0;
+    virtual void Connect() const = 0; 
+    virtual ISocketUPtr Accept() const = 0;
+    virtual int getDescriptor() const = 0;
 };
 } // namespace Socket

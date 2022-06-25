@@ -12,16 +12,11 @@ namespace Socket
 class Socket final : public ISocket
 {
 public:
-    explicit Socket()
-        : _sockfd(socket(AF_INET, SOCK_STREAM, 0))
-        , _state(_sockfd < 0 ? SocketState::CreationError : SocketState::OK)
+    Socket(Address addr, int sock = -1)
+        : _sockfd(sock == -1 ? socket(AF_INET, SOCK_STREAM, 0) : sock)
+        , _addr(addr)
     {
-        checkState();
-    }
-
-    Socket(int sockfd) : _sockfd(sockfd)
-    {
-        checkState();
+        if (_sockfd < 0) exitWithError(SocketError::CreationError);
     }
 
 public:
@@ -32,18 +27,21 @@ public:
     Socket& operator=(Socket&& other) = default;
     virtual ~Socket();
 
-public: // ISocket implementation
-    void Bind(Address addr) const override;
+public:
+    // ISocket implementation
+    void Bind() const override;
     void Listen() const override;
-    void Connect(Address addr) const override;
-    ISocketUPtr Accept(Address addr) const override;
+    void Connect() const override;
+    ISocketUPtr Accept() const override;
+    int getDescriptor() const override;
 
 private:
-    void checkState() const;
-    sockaddr_in convertToSockaddr(const Address addr) const;
+    void exitWithError(SocketError errorType) const;
+    sockaddr_in addressToSockaddr(const Address addr) const;
+    Address sockaddrToAddress(const sockaddr_in addr) const;
 
 private:
     int _sockfd;
-    mutable SocketState _state;
+    Address _addr; // Either the socket is bound to this addr, or it's connected to this addr
 };
 } // namespace Socket
