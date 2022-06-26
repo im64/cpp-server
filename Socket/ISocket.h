@@ -14,6 +14,8 @@ enum class SocketError : std::size_t
     ListeningError,
     AcceptingError,
     ConnectionError,
+    SendingError,
+    ReceivingError
 };
 
 struct Address
@@ -36,6 +38,8 @@ public:
     virtual void Listen() const = 0;
     virtual void Connect() const = 0; 
     virtual ISocketUPtr Accept() const = 0;
-    virtual int getDescriptor() const = 0;
+
+    virtual void Send(const std::string& data) const = 0;
+    virtual std::string Recieve(std::size_t buffSize = 4096) const = 0;
 };
 } // namespace Socket

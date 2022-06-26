@@ -12,10 +12,12 @@ using namespace Socket;
 static const std::unordered_map<SocketError, std::string> errorMessages
 {
     {SocketError::CreationError,    "socket() failed"},
-    {SocketError::BindingError,     "bind() failed"},
-    {SocketError::ListeningError,   "listen() failed"},
-    {SocketError::AcceptingError,   "accept() failed"},
-    {SocketError::ConnectionError,  "connect() failed"},
+    {SocketError::BindingError,     "Bind() failed"},
+    {SocketError::ListeningError,   "Listen() failed"},
+    {SocketError::AcceptingError,   "Accept() failed"},
+    {SocketError::ConnectionError,  "Connect() failed"},
+    {SocketError::SendingError,     "Send() failed"},
+    {SocketError::ConnectionError,  "Receive() failed"},
 };
 
 } // namespace
@@ -56,9 +58,16 @@ void Socket::Connect() const
         exitWithError(SocketError::ConnectionError);
 }
 
-int Socket::getDescriptor() const
+void Socket::Send(const std::string& data) const
 {
-    return _sockfd;
+    send(_sockfd, data.c_str(), data.size(), 0);
+}
+
+std::string Socket::Recieve(std::size_t buffSize) const
+{
+    char buffer[buffSize];
+    recv(_sockfd, buffer, buffSize, 0); 
+    return {buffer};
 }
 
 void Socket::exitWithError(SocketError errorType) const

@@ -33,7 +33,8 @@ public:
     void Listen() const override;
     void Connect() const override;
     ISocketUPtr Accept() const override;
-    int getDescriptor() const override;
+    void Send(const std::string& data) const override;
+    std::string Recieve(std::size_t buffSize) const override;;
 
 private:
     void exitWithError(SocketError errorType) const;
