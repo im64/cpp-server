@@ -40,6 +40,6 @@ public:
     virtual ISocketUPtr Accept() const = 0;
 
     virtual void Send(const std::string& data) const = 0;
-    virtual std::string Recieve(std::size_t buffSize = 4096) const = 0;
+    virtual std::string Recieve(std::size_t buffSize = 1024) const = 0;
 };
 } // namespace Socket

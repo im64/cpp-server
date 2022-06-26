@@ -65,9 +65,18 @@ void Socket::Send(const std::string& data) const
 
 std::string Socket::Recieve(std::size_t buffSize) const
 {
+    const std::string crlf = "\r\n\r\n";
     char buffer[buffSize];
-    recv(_sockfd, buffer, buffSize, 0); 
-    return {buffer};
+    std::string res;
+
+    do
+    {
+        int x = recv(_sockfd, buffer, buffSize, 0);
+        buffer[x] = '\0';
+        res += buffer;
+    }
+    while (res.find(crlf) == std::string::npos || res.size() % buffSize != 0);
+    return res;
 }
 
 void Socket::exitWithError(SocketError errorType) const
